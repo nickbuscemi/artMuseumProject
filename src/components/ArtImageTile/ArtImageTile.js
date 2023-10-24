@@ -84,7 +84,7 @@ function ArtImageTile({ art, galleryId }) {
             <Button variant="primary">View Artwork</Button>
           </Link>
         </Card.Body>
-      </Card>
+      </Card> 
     </Col>
   );
 }

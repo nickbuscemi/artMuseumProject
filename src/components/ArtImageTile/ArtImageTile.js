@@ -36,60 +36,63 @@ function ArtImageTile({ art, galleryId }) {
 export default ArtImageTile;*/
   
   
-import React, { useState } from "react";
+import React, { useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import Card from 'react-bootstrap/Card';
 import Button from 'react-bootstrap/Button';
 import Col from 'react-bootstrap/Col';
-import Collapse from 'react-bootstrap/Collapse';
+import Overlay from 'react-bootstrap/Overlay';
+import Tooltip from 'react-bootstrap/Tooltip';
+
+
 
 
 function ArtImageTile({ art, galleryId }) {
-  const [open, setOpen] = useState(false);
-
-  const imageStyle = {
-    width: '100%',     
-    height: '400px',   
-    objectFit: 'cover' 
-  };
-
-  const toggleDescription = () => {
-    setOpen(!open);
-  };
-
-  return (
-    <Col md={4}>
-      <Card style={{ width: '400px', height: '600px' }} className="mb-4">
-        <Link to={`/galleries/${galleryId}/art/${art.id}`}>
-          <Card.Img variant="top" src={art.images[0].baseimageurl} alt={art.title} style={imageStyle} />
-        </Link>
-        <Card.Body>
-          <Card.Title>{art.title}</Card.Title>
-          <Button
-            onClick={toggleDescription}
-            aria-controls="collapse-description"
-            aria-expanded={open}
-            variant="link"
-          >
-            {open ? 'Hide Description' : 'Show Description'}
-          </Button>
-          <Collapse in={open}>
-            <div id="collapse-description">
-              <Card.Text>
-                {art.description || 'No description available.'}
-              </Card.Text>
-            </div>
-          </Collapse>
-          <Link to={`/galleries/${galleryId}/art/${art.id}`}>
-            <Button variant="primary">View Artwork</Button>
-          </Link>
-        </Card.Body>
-      </Card> 
-    </Col>
-  );
-}
-
-export default ArtImageTile;
+    const [show, setShow] = useState(false);
+    const target = useRef(null);
+  
+    const imageStyle = {
+      width: '100%',
+      height: '600px',
+      objectFit: 'cover',
+    };
+  
+    return (
+      <Col md={4}>
+        <Card 
+          style={{ width: '400px' }} 
+          className="mb-4" 
+          ref={target} 
+          onMouseOver={() => setShow(true)} 
+          onMouseOut={() => setShow(false)}
+        >
+          {art.images && art.images.length > 0 ? (
+            <Link to={`/galleries/${galleryId}/art/${art.id}`}>
+              <Card.Img variant="top" src={art.images[0].baseimageurl} alt={art.title} style={imageStyle} />
+            </Link>
+          ) : (
+            <div style={imageStyle}>Image not available</div>
+          )}
+          <Card.Body>
+            <Card.Title>{art.title}</Card.Title>
+            <Link to={`/galleries/${galleryId}/art/${art.id}`}>
+              <Button variant="primary">View Artwork</Button>
+            </Link>
+          </Card.Body>
+        </Card>
+        <Overlay target={target.current} show={show} placement='right'>
+          {(props) => (
+            <Tooltip id="overlay-example" {...props}>
+              {art.description || 'No description available.'}
+            </Tooltip>
+          )}
+        </Overlay>
+      </Col>
+    );
+  }
+  
+  export default ArtImageTile;
+  
 
   
   

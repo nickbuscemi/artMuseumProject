@@ -1,5 +1,6 @@
 import React from 'react';
 import { useParams, Link } from 'react-router-dom';
+import { Row, Col } from 'react-bootstrap';
 
 function ArtDescription({ galleries }) {
     const { galleryId, artId } = useParams();
@@ -14,9 +15,11 @@ function ArtDescription({ galleries }) {
             <h2><a href={art.url} target="_blank" rel="noopener noreferrer">{art.title}</a></h2>
 
             <div>
-                {art.images.map(image => (
-                    <img key={image.imageid} src={image.baseimageurl} alt={art.title} />
-                ))}
+                <Row>
+                        {art.images.map(image => (
+                            <img key={image.imageid} src={image.baseimageurl} alt={art.title} width="500" height="auto"/>
+                        ))}
+                </Row>
             </div>
 
             <p>{art.description}</p>
